@@ -2,7 +2,7 @@
     "data": {
         "filename": "sensor.csv",
         "columns": [
-            "Sensor_Value"
+            "# sensor_value"
         ],
         "sequence_length": 8,
         "tt_split": 0.85,

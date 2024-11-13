@@ -39,7 +39,7 @@ def plot_results_multiple(predicted_data, true_data, prediction_len):
 def main():
 
     config = json.load(open('config.json', 'r'))
-    if not os.path.exists(config['model']['save_dir']): os.makedirs(config['model']['save_dir'])
+    if not os.path.exists(config['model']['save_directory']): os.makedirs(config['model']['save_directory'])
 
     model = Model()
     model.build_model(config)
@@ -52,7 +52,8 @@ def main():
     seq_len = config['data']['sequence_length']
     sensor_data = []
     predictions_data = []
-    live_data = np.arrange(seq_len[0] - 1)
+    live_data = np.zeros(seq_len - 1)
+
 
     plt.ion() # Real time graph
 
@@ -60,7 +61,7 @@ def main():
 
         i = 0
         
-        while i < seq_len[0] - 1:                       # Store incoming data to testing data array
+        while i < seq_len - 1:                       # Store incoming data to testing data array
             b = sensor_port.readline()                  # Read a byte string
             live_data[i] = float(b.decode())
             sensor_data.append(live_data[i])
@@ -78,14 +79,14 @@ def main():
         plt.show()
         plt.pause(0.1)
 
-        if len(sensor_data) > 10 * seq_len[0]:
+        if len(sensor_data) > 10 * seq_len:
             np.savetxt('data\sensor.csv', sensor_data, delimiter = ',', header = 'sensor_value')
         
         # Load data for training
 
             data = DataLoader(
                 os.path.join('data', config['data']['filename']),
-                config['data']['train_test_split'],
+                config['data']['tt_split'],
                 config['data']['columns']
             )
 
@@ -99,7 +100,7 @@ def main():
                 y, 
                 epochs = config['training']['epochs'],
                 batch_size = config['training']['batch_size'],
-                save_dir = config['model']['save_dir']
+                save_dir = config['model']['save_directory']
             )
 
             sensor_data = sensor_data[-100:]

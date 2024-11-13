@@ -25,7 +25,7 @@ class Model():
     def build_model(self, config):
 
         timer = Timer()
-        timer.start
+        timer.start()
 
         for layer in config['model']['layers']:
 
